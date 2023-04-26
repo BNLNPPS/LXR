@@ -1,0 +1,733 @@
+This file draws your attention on changes made
+which could impact your existing trees.
+
+If they result in an incompatibility, you must reindex your tree.
+
+        =========================
+        LXR 2.3.4  -->  LXR 2.3.5
+        =========================
+
+Bug fix release.
+
+genxref
+-------
+Bug fix in 2.3.3 did not cover all cases, resulting in failure to set up
+properly index databases for glimpse.  It may be wise to erase the glimpse
+databases directory and to reindex your trees.
+
+        =========================
+        LXR 2.3.3  -->  LXR 2.3.4
+        =========================
+
+Bug fix release.
+
+Lang.pm
+-------
+fix for an endless loop case on include-like source statements when a
+malformed path is submitted
+
+        =========================
+        LXR 2.3.2  -->  LXR 2.3.3
+        =========================
+
+Bug fix release.
+
+Apache web server
+------
+event MPM worker is now installed and enabled by default. It was not handled
+by LXR, resulting in incorrect initialisation. This module is also not
+compatible with mod_perl, needing fall back to pure CGI processing.
+
+genxref
+-------
+A bug caused recursive inclusion of glimpse indexing DBs into its private
+directory, resulting in uncontrolled growth of indexing directory.
+
+        =========================
+        LXR 2.3.1  -->  LXR 2.3.2
+        =========================
+
+Bug fix release.
+
+Support for language parsers (Lang.pm)
+----------------------------
+Under some circumstances, language parsers pass to "include" suport routine
+non-sanitised arguments causing an infinite loop when trying to hyperlink
+elements of a path. This is frequently the case with Python.
+
+        =========================
+        LXR 2.3.0  -->  LXR 2.3.1
+        =========================
+
+Bug fix release.
+Vulnerability JVN#7258938 was not fully fixed, done in 2.3.1.
+
+        =========================
+        LXR 2.2.1  -->  LXR 2.3.0
+        =========================
+
+Feature release, vulnerability fixed, bugs fixed.
+Manual slightly updated.
+
+Operational vulnerability (IMPORTANT)
+-------------------------
+Since release 1.0.0, a carefully crafted search string may be used to
+execute arbitrary shell commands on the server, no matter which search
+engine you installed.
+If your LXR server is accessible from the internet, you are urged to
+update to protect yourself. This can be done without the need to reindex
+the tree when there is no modification. Just save your lxr.conf and
+custom.d, substitute the new LXR root directory content, then restore
+lxr.conf and custom.d/. For more information, see INSTALL.
+
+search
+------
+May be enabled during configuration to allow free-text search when tree
+is stored in a source control management system (git, svn, hg, CVS).
+
+Python language
+---------------
+Improved handling of from/import statement
+
+        =========================
+        LXR 2.2.0  -->  LXR 2.2.1
+        =========================
+
+Bug fix release, no change needed in manuals.
+
+configure-lxr.pl
+----------------
+2 typos in an access key to the DB user/password dictionary
+1 semicolon missing between two statements
+1 mispelled variable (users instead of dbusersdict)
+
+templates/Apache/htaccess-generic
+---------------------------------
+New MPM module Event selected by default in Ubuntu distros
+whereas Prefork or Worker expected, resulting in no initialisation at all
+Fix by testing for Prefork only and initialise all others the same
+
+        =======================
+        LXR 2.1.0  -->  LXR 2.2
+        =======================
+
+Feature release, bugs fixed, manual changed.
+
+Configuration
+-------------
+Fully revised with much more checks, individual DB SQL saved
+
+genxref
+-------
+New -T option to suppress trace log
+Purge strategy changed to DB disposal and recreation when possible (much
+faster than deleting from the tables)
+Without --reindexall, Glimpse indexation is now incremental
+Glimpse indexation "offline" to minimize downtime of LXR server with quick
+index DB switch at end
+Statistics about time spent in the various sub-steps recorded in the DB
+(see perf below)
+
+recreate.db
+-----------
+Produces individual scripts capable of upgrading DB schema without losing
+contents in addition to the usual initdb.sh
+
+C# language parser added
+-----------
+
+New script perf to display indexation performance
+           ----
+Implies modifications to DB schema !!!
+												=> DB fix before reindexing
+
+search
+------
+SWISH-E results sorted by filename instead of "relevancy"
+
+Internal
+--------
+DB interface modified such that access is guaranteed read-only while browsing
+
+        =======================
+        LXR 2.0.3  -->  LXR 2.1
+        =======================
+
+Feature release, bugs fixed, no change in manuals.
+
+Tcl language parser added
+------------
+
+source
+------
+Fix author's name truncation (when source file comes from a VCS) to better
+detect character boundary (inluding diacritics), but diff still not adjusted
+Sort files case-insensitively in directory listing as this seems more useful
+to users
+Improve non-text file screening to avoid UTF-8 fatal error
+
+DB backends (suggested by Juraj Variny)
+-----------
+Index usages table on symbol and file (instead of only symbol) to improve
+performance
+Add table optimisation transaction at end of DB loading
+
+Git storage engine
+------------------
+Improved support and configuration
+
+genxref
+-------
+Make sure the version requested by --version= option exists, otherwise
+genxref would index an empty tree without error notification
+
+doc/HACKING
+-----------
+Fix incorrect link to extracted inline documentation on LXR SourceForge site
+
+doc/INSTALL, BUGS
+-----------------
+Change .shtml page URL to .php for LXR site
+
+lighttpd configuration
+----------------------
+LXR becomes a virtual host to facilitate integration with existing site
+Consistent configuration across URL style choices
+
+Apache configuration
+--------------------
+Configuration files have been made independent of 2.2/2.4 changes; upgrading or
+downgrading Apache version is even possible without reconfiguring
+
+Internal
+--------
+Version management converted to Git, causing changes to avoid errors about
+UTF-8 sanity when accessing files in binary mode (anyway, character set
+management is clumsy, if not faulty, and should be redesigned)
+ChangeLog no longer generated during release procedure (unless users request
+it, it will not be provided from now on)
+
+        =========================
+        LXR 2.0.2  -->  LXR 2.0.3
+        =========================
+
+Bug fix release, no feature added, no change in manuals.
+
+Debian-based compatibility (configuration wizard)
+--------------------------
+Debian-based distros (Ubuntu among these) appear to not set properly the
+working directory before launching LXR CGI scripts, resulting in various
+"file not found" errors. Configuration wizard is updated to use only
+OS-absolute paths.
+
+tree-server1.conf.part
+----------------------
+A syntax error prevents correct canonization of hostanme (relevant only in
+multiple-trees context with tree selection based on hostname)
+
+source
+------
+Attempt to truncate author's name (when source file comes from a VCS) on a
+valid UTF-8 character boundary. If 'encoding' parameter is not set to 'utf-8',
+you may see strange glyphs since the UTF-8 sequence is not transcoded.
+NOTE: truncation should be checked likewise in diff's htmljust() sub
+      but this has not been done and causes an incorrect glyph to be
+      displayed in the last pane column (if this character is not a pure
+      ASCII one).
+
+        =========================
+        LXR 2.0.1  -->  LXR 2.0.2
+        =========================
+
+Bug fix release, no feature added, no change in manuals.
+
+XSS protection
+--------------
+Characters & < > are always replaced by the HTML entity reference so that
+they can't be interpreted as an HTML tag
+
+Query state (URL arguments)
+-----------
+All user query criteria forwarded in the generated URL (useful mainly for
+ident and search)
+
+        =======================
+        LXR 2.0  -->  LXR 2.0.1
+        =======================
+
+Bug fix release, no feature added, no change in manuals.
+
+Git interface
+-------------
+Fix for a spurious bug (depends on distro) preventing from listing a file
+Fix for 'range' function in lxr.conf
+
+Ruby parser
+-----------
+Fix for an endless loop
+
+showconfig
+----------
+Fix for a syntax error
+
+Configuration wizard
+--------------------
+Fix truncation of host/alias names
+
+        =====================
+        LXR 1.2  -->  LXR 2.0
+        =====================
+
+This release contains major changes, notably in web server configuration
+and database structure.
+It is therefore highly recommended to reinstall from scratch. For sites
+displaying many trees, when it is not feasible to reconfigure everything,
+some workaround may be attempted (see below).
+
+Installation wizard
+-------------------
+Offers new web server installation options (LXR access, alternate servers)
+More extensive user entry validation
+Safer to use and more reliable than manual configuration
+
+Database interface
+------------------
+Heavily modified and optimised for indexing speed (genxref)
+A good surprise is SQLite performance (particularly on low-end computers)
+
+Language parsers
+----------------
+Numerous fixes for parsing accuracy
+
+Web servers
+-----------
+Choice extended beyond Apache and lighttpd with Nginx, Cherokee and thttpd,
+all supported through the configuration wizard
+
+Better error management
+-----------------------
+Provided the Perl run-time environment could be initialised by the server,
+errors and warning are displayed on screen instead of being sent only into
+log files.
+
+Source code reorganised
+-----------------------
+Many functions have moved from one file to another where they logically
+belong. This is transparent to the end user unless some custom patches
+have been applied to the standard release.
+
+Trying to keep previous LXR server:
+======| In cases where it is not deemed feasible to reinstall from scratch,
+      | lxr.conf can be tentatively reused with this new release (but without
+      | 100% guarantee) after converting database structure and reindexing
+      | trees.
+      | 1/ Databases schema is rebuilt with script recreatedb.pl
+      | 2/ Run its ouput script initdb.sh
+      |    ==> CAUTION! The existing databases are erased by this script!
+      | 3/ Reindex the trees with genxref
+      | For more detailed instructions, read the User's Manual
+
+        =====================
+        LXR 1.1  -->  LXR 1.2
+        =====================
+
+Language parsers
+----------------
+Include processing restructured to avoid infinite loop if source does
+not match internal grammar; now shared between the languages
+Syntax of Java import corrected
+C/C++ parsing separated from generic parser
+Awk parser enabled
+New HTML parser to correct a serious flaw in hyperlink generation
+												=> reindexing recommended
+
+Custom icons
+------------
+New parameter 'parenticon' to define an icon for parent directories
+												=> no impact
+
+User'Manual
+-----------
+Updated to reflect new 1.2 features; separately downloadable on SourceFourge.
+Please, read it; a lot of time has been invested in its writing.
+
+        =====================
+        LXR 1.0  -->  LXR 1.1
+        =====================
+
+Easy upgrade
+------------
+Since the database definition did not change between 1.0 and 1.1,
+you can upgrade without reconfiguring not reindexing.
+1/ Save lxr.conf and other customised files (mainly apache-lxrserver.conf
+   and lighttpd-lxrserver.conf)
+2/ Install the new release.
+3/ Reload lxr.conf and other saved customised files
+4/ Restart your web server
+
+User's Manual
+-------------
+Updated to reflect new 1.1 features; separately downloadable on SourceFourge.
+Please, read it; a lot of time has been invested in its writing.
+
+Installation
+------------
+Few user-visible changes, instructions for 1.0 still valid
+Better web server configuration taking into account the way are described
+in lxr.conf
+Configuration can disable free-text search if no search engine is detected,
+allowing to test LXR without the burden of installing a text search engine
+Script configure-lxr.pl modified so that all (configuration) templates are
+processed the same. Extended macro language (now called LCL) well defined
+and made easily readable.
+
+Directory and file view, identifier cross-references
+----------------------------------------------------
+Visual feedback if file is newer than cross-reference database (useful
+to developers to warn about erroneous line number references in changed
+files); cross-references may be fixed by running again genxref
+												=> needs to rebuild database
+Note: to avoid the pain of manually reconfiguring LXR, read the tip
+====| about "rebuilding LXR databases" on http://lxr.sourceforge.net
+
+Extended exclusion rules
+------------------------
+'ignorefiles' added to hide files. Like 'ignoredirs', operates only
+on the final segment of file path.
+'filterdirs' and 'filterfiles' added to operate on the complete path.
+
+Identifier search
+-----------------
+Query extended to show approximate matches differing in case
+
+Language parsers
+----------------
+Ant, asm, Fortran, Java, JavaScript, Make, Pascal, PHP, SQL enabled
+
+Mercurial.pm: NEW NEW NEW
+-------------
+Experimental support for Mercurial VCS.
+Repository restricted to directory in the local file system, no network
+access allowed.
+Note: this preliminary implementation runs horribly sloooooooow on directory
+====| listing (rougly 0.5 seconds per line). The problem lies in function
+    | getdir(). Though it is similar to Subversion's, it does not run with
+    | the expected speed.
+    | Please send suggestions for improvement.
+
+        ======================
+        LXR 0.11  -->  LXR 1.0
+        ======================
+
+User's Manual
+-------------
+Simultaneously available; separately downloadable on SourceFourge.
+Please, read it; a lot of time has been invested in its writing.
+
+Directory renaming: CAUTION - INCOMPATIBLE CHANGE - CAUTION
+------------------
+Former directory 'lxrconf.d' changed to 'custom.d' to reduce
+confusion with configuration file 'lxr.conf'.
+												=> no impact for new users
+
+configure-lxr.pl: NEW - NEW - NEW
+----------------
+Script to configure lxr.conf and databases. Having an operational LXR is now
+only a matter of a few minutes.
+
+recreatedb.pl: NEW - NEW - NEW
+--------------
+Script to recreate databasese descriptions from lxr.conf instead of
+reconfiguring everything from scratch with configure-lxr.pl above.
+Useful e.g. after a system upgrade when the dbengine has been replaced
+(provided you backuped at least the LXR root directory).
+
+Git.pm
+------
+Git support operational! Use of CPAN module git.pm given up; interactions
+with git have been recoded.
+
+Plain.pm
+--------
+Performance improvement on plain files source-trees: file
+copying suppressed.
+Improvement also when diff'ing two files but not noticeable since diff
+is rather rare and used on a single file at a time.
+
+Subversion.pl: NEW - NEW - NEW
+--------------
+Adds support for Subversion VCS.
+Repository restricted to directory in the local file system, no network
+access allowed.
+
+Index.pm, DB drivers and DB templates
+-------------------------------------
+Rewritten to better take benefit of SQL standardisation; record reference
+counts added in the tables to facilitate individual version removal;
+queries optimised to improve indexing speed (or, at least, not to
+slow it despite the new fields and key checks)
+												=> reindexing required
+
+SQLite.pm
+---------
+New database interface (for small projects): avoids the pain of installing
+a full-fledged DB server at the cost of lower performance.
+
+search script
+------
+'Case sensitive' check box now effective (with glimpse since swish-e is
+always case-insensitive).
+Role of 'advanced' box clarified: applies only to file name.
+												=> no impact on indexing
+
+diff script
+----
+Can now compare two files (with basically the same "virtual" name) differing
+in any number of variables (not only 'v') if that makes sense.
+Note: this is only possible with "buttons-and-menus" interface.
+												=> no impact on indexing
+
+genxref script
+-------
+Progress output reduced and reorganized with color highlighting
+to be useful (see User's Manual)
+
+Languages
+---------
+Scanners and definitions improved (notably JavaScript, Perl, PHP and Python;
+'href=' and the like hyperlinked in HTML files)
+												=> reindex for new keywords
+												   otherwise no impact
+
+lxr.conf
+--------
+Parameter 'maps' changed from 'Perl-hash' to mere 'array' so that order
+of rule application can be controlled.
+Variables can now have a 'when' attribute to display them only
+when they are relevant to current context.
+												=> no impact on indexing
+
+lxr.css
+-------
+Color syntax highlighting changed to Peter Zotov's settings. Thanks to him
+for spending the time to find much nicer colors (in my opinion, but that's
+personal taste). Classic colors still available in classic.css.
+												=> no impact on indexing
+
+Config.pm
+---------
+Modified to handle new 'maps' type.
+This allows also to "reverse" the effects of the rules and compute an
+associated file name when variables are changed (at least if rules are not
+too complex).
+												=> no impact on indexing
+
+New lxrkernel.conf template and kernel-grab-vars.sh script
+    --------------              -------------------
+Provided as goodies to help configuring for the Linux kernel
+
+        =======================
+        LXR 0.10  -->  LXR 0.11
+        =======================
+
+This version begins reorganizing the root directory. As a user remarked, it is becoming a mess.
+New subdirectories are created:
+
+- doc: for release documentation
+- lxrconf.d: all active configuration files go here
+             as well as all user-customised templates
+- LXRimages: all pics and graphic files
+- scripts: shell scripts to ease installation
+- templates: all models sorted in
+	+ Apache  : files related to Apache web server configuration and operation
+	+ html    : the traditional HTML templates
+	+ initdb  : templates to create the databases
+	+ lighttpd: files related to lighttpd web server configuration and
+	            operation
+	+(no dir) : assorted files which couldn't be stored in the above
+	           directories
+
+Should remain in the root directory only the main Perl script files
+(to be accessed by the web server) and the final lxr.conf.
+
+
+Support for fast switching between trees when multiple sources managed.
+
+Reliable dynamic link reconfiguration when changing variable value
+(think of 'version' and 'architecture').
+
+Experimental support for lighttpd web server.
+
+Browsed tree target determined independently from access port, but port
+should still be configured in 'host_names' if you want a default applied
+to generated links.
+
+New script showconfig to display lxr.conf content and help diagnose
+configuration issues.
+
+Installation: new scripts to relieve some pain in configuring
+============= web server and database.
+
+
+Configuration files: if not modified, can be used from the templates
+                     subdirectories; otherwise must be stored in
+                     lxrconf.d directory
+
+lxr.conf:*files controlled by scripts now use OS-absolute path form
+--------  for better reliability; penalty: in the rare event you move
+          your LXR root directory, configuration must be redone
+          from start, unless you first tailored the template.
+         *new parameters 'swishconf' (location was hard-coded!),
+          'alternate_stylesheet'
+         *new parameter 'filetypeconf' pointing to file/parser associations
+
+generic.conf: reorganised so that future fiddling with supported
+------------  languages will have no impact on existing databases
+              (read: language id is guaranteed to remain fixed --
+              unless ctags undergoes drastic changes, of course)
+
+filetype.conf: new file; content was formerly inside lxr.conf but was
+-------------  rarely modified, anyway by the end-user. This makes
+               lxr.conf smaller and more easily manageable by end-user.
+
+
+CSS class attribute name changes
+Substitution marker name (in HTML templates) changes
+												=> no impact
+			(unless you developed your own templates and lxr.css)
+
+        =========================
+        LXR 0.9.10  -->  LXR 0.10
+        =========================
+
+This version contains new features.
+
+The menus-and-buttons interface is considered mature enough to be offered for general release.
+
+lxr.conf
+--------
+New and simpler way of entering the URL of your server with 'host_names'
+'baseurl' and 'baseurl_aliases' kept for compatibility
+												=> no impact (unless you want to use this new feature)
+Custom icons may be used in directory listing	=> no impact (unless you want to use this new feature)
+
+lxr.css
+-------
+More class'es to fine grained control over display
+
+Common.pm
+---------
+File was becoming too big -- split into Template.pm, Markup.pm and Common.pm
+												=> no impact on indexing
+
+templates/
+----------
+Template redesigned and new functions added		=> no impact unless you had custom templates
+												=> no impact on indexing
+
+html-ident-refs.html removed (now integrated in html-ident.html)
+												=> update your customised lxr.conf
+												=> no impact if using released lxr.conf
+												=> no impact on indexing
+
+ident and search scripts
+-----     ------
+Results are now presented in tabular form for better readability
+												=> no impact on indexing
+
+Languages
+---------
+JavaScript and Ruby added						=> re-index your tree
+
+
+genxref script
+-------
+Tests added to detect trivial errors
+  genxref step is done early in the installation/configuration process. This is the appropriate place to detect elementary errors. To see the tests result uncluttered, add --checkonly on the command line
+												=> safer installation
+												=> no impact on indexing
+
+For up-to-date information, connect to http://lxr.sourceforge.net
+
+        ==========================
+        LXR 0.9.9  -->  LXR 0.9.10
+        ==========================
+
+This version is mainly a bug fix release.
+
+Change in generic parser for string was too specific and could result in loss of synchronisation under certain circumstances (i.e. string interpreted as code and code considered as string). Thanks to users feed-back, C, C++, Perl and Python are validated.
+
+It contains partial implementation of features announced for 0.10. DO NOT RELY on them, they are unstable.
+
+For up-to-date information, connect to http://lxr.sourceforge.net
+
+        =========================
+        LXR 0.9.8  -->  LXR 0.9.9
+        =========================
+
+lxr.conf
+--------
+File restructured for more logical reading		=> no impact
+
+Parameter 'graphicfile'
+  More file extensions considered "graphic"		=> no impact on indexing
+	May prevent indexing if extensions used for something non graphic;
+	in that case, modify parameter
+  Parameter now used both to tag file as graphic in directory listing
+  and attempting to display it (consistency)	=> no impact on indexing
+  Pattern simplified: match at end of file name now implicit
+	May not give you what you expect if you used untypical pattern
+	testing something in the middle of the file name.
+	In that case, report as a bug or a feature request
+	for general test on any part of the filename.
+
+Parameter 'filetype'
+  Default tab width changed for some languages	=> no impact on indexing
+	Changes the appearance of source listing
+
+New parameters 'treeextract' and 'encoding'		=> no impact on indexing
+
+lxr.css and templates
+---------------------
+Many more class'es to give more control on appearance	=> no impact on indexing
+
+New template html-fatal.html (error recovery)	=> no impact on indexing
+
+Language parsing
+----------------
+Parser in SimpleParse.pm improved so as not to lose context
+in languages with escape rules (such as C/C++ and Perl). As a
+consequence captures more identifiers
+
+Impact of change not validated outside C, C++ and Perl. Please
+report any abnormal parsing, particularly regarding "escape"
+sequences (think of \" in C-strings). Abnormal parsing means not
+classifying correctly a fragment of file as comment, string, include
+or code, or not giving it the correct extent, not missing an identifier.
+
+(CAUTION: identifier recognition is first dependent on ctags
+  capability during genxref step; thus a missed identifier
+  may be the result of it unknown to the database and the
+  parser cannot then be blamed.)
+
+generic.conf
+------------
+File restructured								=> no impact on indexing
+
+Syntax changed for language specification
+  'langid' changed (but C and C++)				=> reindex if other languages
+  new 'identdef' to define an identifier		=> no impact on indexing
+	Gives you more control on what is an identifier and reserved keyword
+  'spec' syntax changed
+	May capture more identifiers
+	If you made modifications, read manual before merging your
+	changes; in particular, 'atom' rule may no longer be needed.
+												=> reindex if deemed worth
+
+find script
+-----------
+Removed find script and html-find.html template as they were no longer
+integrated inside LXR and replaced by search.
+
+No impact unless you customised find and want to merge your changes in
+search and associated templates.

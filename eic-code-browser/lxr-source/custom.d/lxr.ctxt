@@ -1,0 +1,25 @@
+# -*- mode: perl -*-
+# Context file associated with lxr.conf
+# Created 2020-07-09 01:57:50 UTC
+# Strictly internal, do not play with content
+$context_created = 4;
+
+$cardinality = 's';
+$dbpolicy = 't';
+$dbengine = 'm';
+$nodbuser = 1;
+$nodbprefix = 1;
+$servertype = 'S';
+$scheme = 'http:';
+$hostname = 'localhost';
+$port = '80';
+@schemealiases = qw( http:
+                   );
+@hostaliases = qw( eic-code-browser.sdcc.bnl.gov
+                 );
+@portaliases = qw( 80
+                 );
+$treematch = 'N';
+$commonvirtroot = 0;
+$virtrootbase = '/lxr';
+$virtrootpolicy = '';
