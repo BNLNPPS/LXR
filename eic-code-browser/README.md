@@ -46,10 +46,11 @@ where */usr/local/share/lxr/eic-lxr* is the location of the LXR source code and 
 
 ## Nightly source code downloading and indexing
 
-A cron job is running under the account *apache* **nightly at 3am**. The corresponding cron job script is [cron-eic_lxr.sh](eic-code-browser/cronJob/cron-eic_lxr.sh).
+A cron job is running under the account *apache* **nightly at 3am**. 
+The corresponding cron job script is [cron-eic_lxr.sh](eic-code-browser/cronJob/cron-eic_lxr.sh).
 This script does:
 - Call another script [eic-clonePacks_and_cleanup.sh](eic-code-browser/cronJob/eic-clonePacks_and_cleanup.sh), 
-  which downloads all repos listed in [the repo list file](eic-code-browser/cronJob/repo-list.txt).
+  which downloads all repos (currently just the **main branch**) listed in [the repo list file](eic-code-browser/cronJob/repo-list.txt).
   and copied all header files in a temporary ePIC container, installed via [the script install.sh](https://eic.github.io/eic-shell/install.sh)
 - Then generate the LXR index by running the command `./genxref --url=http://localhost/lxr`.
 
