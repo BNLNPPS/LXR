@@ -1,6 +1,9 @@
 # LXR Cross Referencer for EIC source code
 
-This github repo collects the modified LXR source code and corresponding scripts/configuration files, used to download the EIC source code, and generate the LXR index.
+This github repo collects the modified LXR source code and corresponding scripts/configuration files, 
+used to download the EIC source code, and generate the LXR index.
+
+The LXR Crosss Referencer link is https://eic-code-browser.sdcc.bnl.gov/lxr/source
 
 ## Required Software
 
